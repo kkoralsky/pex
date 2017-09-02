@@ -142,20 +142,23 @@ class PEXEnvironment(Environment):
     unresolved_reqs = set()
     resolveds = set()
 
+    for key in self:
+      resolveds.update(self[key])
+
     # Resolve them one at a time so that we can figure out which ones we need to elide should
     # there be an interpreter incompatibility.
-    for req in reqs:
-      with TRACER.timed('Resolving %s' % req, V=2):
-        try:
-          resolveds.update(working_set.resolve([req], env=self))
-        except DistributionNotFound as e:
-          TRACER.log('Failed to resolve a requirement: %s' % e)
-          unresolved_reqs.add(e.args[0].project_name)
-          # Older versions of pkg_resources just call `DistributionNotFound(req)` instead of the
-          # modern `DistributionNotFound(req, requirers)` and so we may not have the 2nd requirers
-          # slot at all.
-          if len(e.args) >= 2 and e.args[1]:
-            unresolved_reqs.update(e.args[1])
+    # for req in reqs:
+      # with TRACER.timed('Resolving %s' % req, V=2):
+        # try:
+          # resolveds.update(working_set.resolve([req], env=self))
+        # except DistributionNotFound as e:
+          # TRACER.log('Failed to resolve a requirement: %s' % e)
+          # unresolved_reqs.add(e.args[0].project_name)
+          # # Older versions of pkg_resources just call `DistributionNotFound(req)` instead of the
+          # # modern `DistributionNotFound(req, requirers)` and so we may not have the 2nd requirers
+          # # slot at all.
+          # if len(e.args) >= 2 and e.args[1]:
+            # unresolved_reqs.update(e.args[1])
 
     unresolved_reqs = set([req.lower() for req in unresolved_reqs])
 

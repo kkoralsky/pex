@@ -192,8 +192,10 @@ class Resolver(object):
         resolvable, parent = resolvables.pop(0)
         if resolvable in processed_resolvables:
           continue
-        packages = self.package_iterator(resolvable, existing=resolvable_set.get(resolvable.name))
-        resolvable_set.merge(resolvable, packages, parent)
+        existing = resolvable_set.get(resolvable.name)
+        packages = self.package_iterator(resolvable, existing=existing)
+        if len(existing)==0:
+          resolvable_set.merge(resolvable, packages, parent)
         processed_resolvables.add(resolvable)
 
       built_packages = {}
