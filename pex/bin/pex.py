@@ -150,6 +150,13 @@ def configure_clp_pex_resolution(parser, builder):
       help='Whether to use pypi to resolve dependencies; Default: use pypi')
 
   group.add_option(
+    '--pex-path',
+    dest='pex_path',
+    type=str,
+    default=None,
+    help='A colon separated list of other pex files to merge into the runtime environment.')
+
+  group.add_option(
       '-f', '--find-links', '--repo',
       metavar='PATH/URL',
       action='callback',
@@ -533,6 +540,7 @@ def build_pex(args, options, resolver_option_builder):
 
   pex_info = pex_builder.info
   pex_info.zip_safe = options.zip_safe
+  pex_info.pex_path = options.pex_path
   pex_info.always_write_cache = options.always_write_cache
   pex_info.ignore_errors = options.ignore_errors
   pex_info.inherit_path = options.inherit_path
@@ -557,7 +565,8 @@ def build_pex(args, options, resolver_option_builder):
                                 interpreters=interpreters,
                                 platforms=options.platform,
                                 cache=options.cache_dir,
-                                cache_ttl=options.cache_ttl)
+                                cache_ttl=options.cache_ttl,
+                                allow_prereleases=resolver_option_builder.prereleases_allowed)
 
       for dist in resolveds:
         log('  %s' % dist, v=options.verbosity)
