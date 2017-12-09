@@ -1,6 +1,18 @@
 Release Notes
 =============
 
+1.2.15
+------
+
+* Bugfix for entry point targeting + integration test (#435)
+  `#435 <https://github.com/pantsbuild/pex/pull/435>`_
+
+1.2.14
+------
+
+* Add interpreter constraints option and use constraints to search for compatible interpreters at exec time (#427)
+  `#427 <https://github.com/pantsbuild/pex/pull/427>`_
+
 1.2.13
 ------
 
